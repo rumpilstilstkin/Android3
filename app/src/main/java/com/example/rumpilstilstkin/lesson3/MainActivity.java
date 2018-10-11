@@ -39,11 +39,16 @@ public class MainActivity extends AppCompatActivity {
 
         TextView text = findViewById(R.id.am_tv_text);
 
-        text.setOnClickListener(v -> {
-            int a = 8;
+        text.setOnClickListener(view -> {
+            String d = "";
         });
 
         String[] strings = {"3", "4", "5"};
+
+        Arrays.sort(strings, (s, t1) -> {
+            String t = "";
+            return Integer.compare(s.length(), t1.length());
+        });
 
         Arrays.sort(strings, new LengthComp());
 
@@ -52,8 +57,8 @@ public class MainActivity extends AppCompatActivity {
         Comparator<String> lengthComp = (firstString, secondString) -> Integer.compare(firstString.length(), secondString.length());
 
         Arrays.sort(strings, lengthComp);
-        createFl();
 
+        createFl();
     }
 
 
@@ -187,6 +192,7 @@ public class MainActivity extends AppCompatActivity {
                 catch (InterruptedException e) {
                     e.printStackTrace();
                     Log.d("Dto", "interrupted " + e);
+                    emitter.onError(e);
                     return;
                 }
                 emitter.onNext(i);
@@ -199,31 +205,31 @@ public class MainActivity extends AppCompatActivity {
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<Integer>() {
 
-            @Override
-            public void onSubscribe(Subscription s) {
-                s.request(Long.MAX_VALUE);
-            }
+                    @Override
+                    public void onSubscribe(Subscription s) {
+                        s.request(Long.MAX_VALUE);
+                    }
 
-            @Override
-            public void onNext(Integer integer) {
-                Log.d("Dto", "get " + integer);
-                try {
-                    TimeUnit.SECONDS.sleep(20);
-                }
-                catch (InterruptedException e) {
-                    e.printStackTrace();
-                    Log.d("Dto", "interrupted " + e);
-                    return;
-                }
-            }
+                    @Override
+                    public void onNext(Integer integer) {
+                        Log.d("Dto", "get " + integer);
+                        try {
+                            TimeUnit.SECONDS.sleep(20);
+                        }
+                        catch (InterruptedException e) {
+                            e.printStackTrace();
+                            Log.d("Dto", "interrupted " + e);
+                            return;
+                        }
+                    }
 
-            @Override
-            public void onError(Throwable t) {
-            }
+                    @Override
+                    public void onError(Throwable t) {
+                    }
 
-            @Override
-            public void onComplete() {
-            }
-        });
+                    @Override
+                    public void onComplete() {
+                    }
+                });
     }
 }
